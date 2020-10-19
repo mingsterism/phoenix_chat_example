@@ -32,6 +32,9 @@ class App {
     })
 
     chan.on("new:msg", msg => {
+      console.log("NEW MESSAGE ----------")
+      console.log(chan)
+      console.log("NEW MESSAGE ----------")
       $messages.append(this.messageTemplate(msg))
       scrollTo(0, document.body.scrollHeight)
     })

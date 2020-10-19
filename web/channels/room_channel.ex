@@ -13,6 +13,8 @@ defmodule Chat.RoomChannel do
   for the requested topic
   """
   def join("rooms:lobby", message, socket) do
+    IO.inspect(message)
+    IO.inspect(socket)
     Process.flag(:trap_exit, true)
     :timer.send_interval(5000, :ping)
     send(self, {:after_join, message})
@@ -20,9 +22,21 @@ defmodule Chat.RoomChannel do
     {:ok, socket}
   end
 
-  def join("rooms:" <> _private_subtopic, _message, _socket) do
-    {:error, %{reason: "unauthorized"}}
+  def join("rooms:" <> private_subtopic, message, socket) do
+    IO.puts("ALL ROOMS")
+    IO.inspect(private_subtopic)
+    IO.inspect(message)
+    IO.inspect(socket)
+    Process.flag(:trap_exit, true)
+    :timer.send_interval(5000, :ping)
+    send(self, {:after_join, message})
+
+    {:ok, socket}
   end
+
+  # def join("rooms:" <> _private_subtopic, _message, _socket) do
+  #   {:error, %{reason: "unauthorized"}}
+  # end
 
   def handle_info({:after_join, msg}, socket) do
     broadcast! socket, "user:entered", %{user: msg["user"]}
